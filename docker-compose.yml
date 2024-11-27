@@ -1,30 +1,27 @@
-version: "3.6"
-
 services:
     emailqueue:
         image: emailqueue-apache
         container_name: emailqueue-apache
         build:
-            context: .
-            dockerfile: ./apache/Dockerfile
+            context: ./emailqueue
+            dockerfile: ./Dockerfile
         ports:
-            - 8081:80
+            - "8081:80"
         networks:
             - emailqueue
         volumes:
-            - ../application.config.inc.php:/emailqueue/config/application.config.inc.php
+            - ./emailqueue:/emailqueue
+            - ./application.config.inc.php:/emailqueue/config/application.config.inc.php
         restart: unless-stopped
 
     emailqueue-mariadb:
         image: mariadb
         container_name: emailqueue-mariadb
-        environment:
-            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         networks:
             - emailqueue
         volumes:
-            - ./mariadb/data:/var/lib/mysql
-            - ./mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+            - ./docker/mariadb/data:/var/lib/mysql
+            - ./docker/mariadb/emailqueue_init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
         environment:
             - MYSQL_DATABASE=emailqueue
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
