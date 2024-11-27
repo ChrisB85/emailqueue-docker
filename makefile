@@ -14,22 +14,22 @@ help: ## Show this help message
 	egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
 up: ## Start the containers
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml up -d
+	docker compose -p ${PROJECT_NAME} up -d
 
 stop: ## Stop the containers
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml stop
+	docker compose -p ${PROJECT_NAME} stop
 
 down: ## Remove the containers
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml down
+	docker compose -p ${PROJECT_NAME} down
 
 restart: ## Restart the containers
 	$(MAKE) stop && $(MAKE) up
 
 ps: ## Information about the containers
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml ps
+	docker compose -p ${PROJECT_NAME} ps
 
 apache-build: ## Builds the apache image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue
+	docker compose -p ${PROJECT_NAME} build emailqueue
 
 apache-log: ## Tail the PHP error log
 	docker logs -f --details ${DOCKER_APACHE}
@@ -38,7 +38,7 @@ apache-ssh: ## SSH into the apache container
 	docker exec -it -u root ${DOCKER_APACHE} bash
 
 db-build: ## Builds the mariadb image
-	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose.yml build emailqueue-mariadb
+	docker compose -p ${PROJECT_NAME} build emailqueue-mariadb
 
 db-log: ## Tail the PHP error log
 	docker logs -f --details ${DOCKER_DB}
